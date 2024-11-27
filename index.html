@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinanceEase - Home</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="home-page">
+
+  <div class="app-container">
+    <div class="app-header">
+      <h1>FinanceEase</h1>
+      <p>Your financial assistant</p>
+    </div>
+    <div class="action-buttons">
+      <a href="savings.html" class="button-link">Money Draft</a>
+      <a href="settings.html" class="button-link">Settings</a>
+      <a href="start.html" class="button-link">Back</a>
+    </div>
+  </div>
+
+  <script>
+    // Apply the theme if saved in localStorage
+    const currentTheme = localStorage.getItem("theme");
+    if (currentTheme) {
+      document.body.classList.add(currentTheme);
+    }
+
+    // Load saved balance and theme
+    document.getElementById("balance").textContent = localStorage.getItem('balance') || "₹0";
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinanceEase - Money Draft</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="savings-page">
+
+  <div class="app-container">
+    <div class="app-header">
+      <h1>Money Draft</h1>
+    </div>
+
+    <div class="balance-info">
+      <p><strong>Total Savings: </strong> ₹<span id="total-savings">0</span></p>
+    </div>
+
+    <div class="income-expense-section">
+      <div class="income-section">
+        <h2>Income</h2>
+        <input type="number" id="income-amount" placeholder="Enter income amount" />
+        <button onclick="addIncome()">Add Income</button>
+      </div>
+
+      <div class="expense-section">
+        <h2>Expense</h2>
+        <input type="number" id="expense-amount" placeholder="Enter expense amount" />
+        <button onclick="addExpense()">Add Expense</button>
+      </div>
+    </div>
+
+    <div class="transaction-history">
+      <h2>Transaction History</h2>
+      <table id="transaction-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Transactions will be displayed here -->
+        </tbody>
+      </table>
+      <!-- Button to clear transaction history -->
+      <button class="clear-history-btn" onclick="clearTransactionHistory()">Clear Transaction History</button>
+    </div>
+
+    <div class="action-buttons">
+      <a href="index.html" class="button-link">Back to Home</a>
+      <a href="settings.html" class="button-link">Settings</a>
+    </div>
+  </div>
+
+  <script>
+    // Apply the theme if saved in localStorage
+    const currentTheme = localStorage.getItem("theme");
+    if (currentTheme) {
+      document.body.classList.add(currentTheme);
+    }
+
+    // Load previous balance and transactions from localStorage
+    let totalSavings = parseFloat(localStorage.getItem('totalSavings')) || 0;
+    const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+
+    // Update the displayed total savings
+    document.getElementById('total-savings').textContent = totalSavings;
+
+    // Display transaction history
+    function displayTransactions() {
+      const transactionTable = document.getElementById('transaction-table').getElementsByTagName('tbody')[0];
+      transactionTable.innerHTML = ''; // Clear the table before repopulating
+      transactions.forEach(transaction => {
+        const row = transactionTable.insertRow();
+        row.insertCell(0).textContent = transaction.date;
+        row.insertCell(1).textContent = transaction.type;
+        row.insertCell(2).textContent = '₹' + transaction.amount.toFixed(2);
+      });
+    }
+
+    // Add Income function
+    function addIncome() {
+      const incomeAmount = parseFloat(document.getElementById('income-amount').value);
+      if (isNaN(incomeAmount) || incomeAmount <= 0) {
+        alert("Please enter a valid income amount.");
+        return;
+      }
+
+      totalSavings += incomeAmount;
+      transactions.push({
+        date: new Date().toLocaleString(),
+        type: "Income",
+        amount: incomeAmount
+      });
+
+      // Save updated data
+      localStorage.setItem('totalSavings', totalSavings);
+      localStorage.setItem('transactions', JSON.stringify(transactions));
+
+      // Update UI
+      document.getElementById('total-savings').textContent = totalSavings.toFixed(2);
+      displayTransactions();
+
+      // Clear input field
+      document.getElementById('income-amount').value = '';
+    }
+
+    // Add Expense function
+    function addExpense() {
+      const expenseAmount = parseFloat(document.getElementById('expense-amount').value);
+      if (isNaN(expenseAmount) || expenseAmount <= 0) {
+        alert("Please enter a valid expense amount.");
+        return;
+      }
+
+      totalSavings -= expenseAmount;
+      transactions.push({
+        date: new Date().toLocaleString(),
+        type: "Expense",
+        amount: expenseAmount
+      });
+
+      // Save updated data
+      localStorage.setItem('totalSavings', totalSavings);
+      localStorage.setItem('transactions', JSON.stringify(transactions));
+
+      // Update UI
+      document.getElementById('total-savings').textContent = totalSavings.toFixed(2);
+      displayTransactions();
+
+      // Clear input field
+      document.getElementById('expense-amount').value = '';
+    }
+
+    // Function to clear transaction history
+    function clearTransactionHistory() {
+      if (confirm("Are you sure you want to delete all transaction history?")) {
+        // Clear data in localStorage
+        localStorage.removeItem('transactions');
+        localStorage.setItem('totalSavings', 0); // Reset total savings to 0
+        
+        // Reset the UI
+        transactions.length = 0; // Clear the transaction array
+        document.getElementById('total-savings').textContent = '0.00';
+        displayTransactions(); // Re-render the table
+      }
+    }
+
+    // Initial display of transactions
+    displayTransactions();
+  </script>
+
+</body>
+</html>

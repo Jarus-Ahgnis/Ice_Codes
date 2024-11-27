@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinanceEase - Profile</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="profile-page">
+
+  <div class="app-container">
+    <div class="app-header">
+      <h1>Profile</h1>
+    </div>
+
+    <div class="profile-info">
+      <h2>Update Your Information</h2>
+      <div class="input-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" placeholder="Enter your name" value="" />
+      </div>
+      <div class="input-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" placeholder="Enter your email" value="" />
+      </div>
+      <button onclick="saveProfile()">Save</button>
+    </div>
+
+    <!-- Display updated profile info -->
+    <div class="profile-display">
+      <p id="display-name">Name: </p>
+      <p id="display-email">Email: </p>
+      <button onclick="editProfile()">Edit</button>
+    </div>
+
+    <div class="action-buttons">
+      <a href="index.html" class="button-link">Back to Home</a>
+      <a href="settings.html" class="button-link">Settings</a>
+    </div>
+  </div>
+
+  <script>
+    // Apply the theme if saved in localStorage
+    const currentTheme = localStorage.getItem("theme");
+    if (currentTheme) {
+      document.body.classList.add(currentTheme);
+    }
+
+    // Load saved profile data if available
+    const savedName = localStorage.getItem('name');
+    const savedEmail = localStorage.getItem('email');
+    document.getElementById("name").value = savedName || '';
+    document.getElementById("email").value = savedEmail || '';
+
+    // Function to save profile and update display
+    function saveProfile() {
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+
+      // Save to localStorage
+      if (name && email) {
+        localStorage.setItem('name', name);
+        localStorage.setItem('email', email);
+
+        // Update the display immediately
+        document.getElementById("display-name").textContent = `Name: ${name}`;
+        document.getElementById("display-email").textContent = `Email: ${email}`;
+        
+        // Hide the input fields and show the updated profile display
+        document.querySelector('.profile-info').style.display = 'none';
+        document.querySelector('.profile-display').style.display = 'block';
+      }
+    }
+
+    // Function to show the input fields for editing
+    function editProfile() {
+      // Show the input fields again
+      document.querySelector('.profile-info').style.display = 'block';
+      document.querySelector('.profile-display').style.display = 'none';
+    }
+  </script>
+
+</body>
+</html>
